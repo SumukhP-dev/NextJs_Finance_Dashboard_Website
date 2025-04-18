@@ -1,4 +1,4 @@
-# Next.js Dashboard Website
+# Next.js Finance Dashboard Website
 
 ## About
 This is a website built with Next.js, typescript, and
