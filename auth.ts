@@ -16,6 +16,47 @@ async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
+export const signUp = async (data: FormData) => {
+  console.log('Sign Up Data:', data);
+
+  if (await getUser(data.get('email')?.toString() || '')) {
+    console.log('User already exists.');
+    await signIn('credentials', data);
+  } else {
+    try {
+      const email = data.get('email')?.toString();
+      const name = email?.replace('.', ' ').substring(0, email.indexOf('@'));
+      const password = data.get('password')?.toString();
+
+      const parsedCredentials = z
+        .object({ email: z.string().email(), password: z.string().min(6) })
+        .safeParse({ email, password });
+
+      console.log('Name:', name);
+      console.log('Email:', email);
+      console.log('Password:', password);
+
+      console.log('Parsed Credentials:', parsedCredentials);
+
+      if (password != undefined) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        if (parsedCredentials.success) {
+          const user = await sql<User>`INSERT INTO users
+    (name, email, password) VALUES
+      (${name}, ${email}, ${hashedPassword}) RETURNING *`;
+        } else {
+          throw new Error('Invalid credentials.');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to create user:', error);
+    }
+
+    await signIn('credentials', data);
+  }
+};
+
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
@@ -24,6 +65,8 @@ export const { auth, signIn, signOut } = NextAuth({
         const parsedCredentials = z
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
+
+        console.log('Parsed Credentials Authorized:', parsedCredentials);
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;

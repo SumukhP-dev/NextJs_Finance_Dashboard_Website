@@ -9,17 +9,17 @@ import {
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
 import { useFormState, useFormStatus } from 'react-dom';
-import { authenticate } from '@/app/lib/actions';
+import { createUser } from '@/app/lib/actions';
 import Link from 'next/link';
 
-export default function LoginForm() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+export default function SignUpForm() {
+  const [errorMessage, dispatch] = useFormState(createUser, undefined);
 
   return (
     <form action={dispatch} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
-          Please log in to continue.
+          Please sign up to continue.
         </h1>
         <div className="w-full">
           <div>
@@ -64,7 +64,7 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        <LoginButton />
+        <SignUpButton />
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
@@ -82,16 +82,16 @@ export default function LoginForm() {
   );
 }
 
-function LoginButton() {
+function SignUpButton() {
   const { pending } = useFormStatus();
 
   return (
     <>
       <Button className="mt-4 w-full" aria-disabled={pending}>
-        Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+        Sign up <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
       </Button>
       <h1 className="w-full pt-3">
-        <Link href="/sign-up">Create an Account? </Link>
+        <Link href="/login">Need to Login? </Link>
       </h1>
     </>
   );
