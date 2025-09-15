@@ -1,5 +1,5 @@
 # Next.js Finance Dashboard Website
-A Next. js-based website that can be used to create and track invoices. 
+A Next.js-based website that can be used to create and track invoices. 
 
 ---
 
